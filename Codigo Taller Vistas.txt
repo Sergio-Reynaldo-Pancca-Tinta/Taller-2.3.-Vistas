@@ -1,0 +1,155 @@
+
+DROP TABLE tEnfermedadEnElDiagnostico CASCADE CONSTRAINTS;
+DROP TABLE tEspecialidadDelMedico CASCADE CONSTRAINTS;
+DROP TABLE tDiagnostico CASCADE CONSTRAINTS;
+DROP TABLE tPaciente CASCADE CONSTRAINTS;
+DROP TABLE tMedico CASCADE CONSTRAINTS;
+DROP TABLE tEspecialidad CASCADE CONSTRAINTS;
+DROP TABLE tEnfermedad CASCADE CONSTRAINTS;
+
+
+CREATE TABLE tPaciente (
+    codP              VARCHAR2(4) PRIMARY KEY,
+    tipoDocP          VARCHAR2(15),
+    nroDocP           VARCHAR2(12),
+    paternoP          VARCHAR2(50),
+    maternoP          VARCHAR2(50),
+    nombresP          VARCHAR2(50),
+    fechaNacimientoP  DATE,
+    generoP           CHAR(1)
+);
+
+CREATE TABLE tMedico (
+    codM              VARCHAR2(4) PRIMARY KEY,
+    tipoDocM          VARCHAR2(15),
+    nroDocM           VARCHAR2(12),
+    paternoM          VARCHAR2(50),
+    maternoM          VARCHAR2(50),
+    nombresM          VARCHAR2(50),
+    celularM          VARCHAR2(12),
+    fechaNacimientoM  DATE,
+    generoM           CHAR(1)
+);
+
+CREATE TABLE tEspecialidad (
+    codEsp            VARCHAR2(4) PRIMARY KEY,
+    nombreEsp         VARCHAR2(70),
+    descripcionEsp    VARCHAR2(100)
+);
+
+CREATE TABLE tEnfermedad (
+    codE              VARCHAR2(4) PRIMARY KEY,
+    nombreE           VARCHAR2(50),
+    descricionE       VARCHAR2(100)
+);
+
+CREATE TABLE tDiagnostico (
+    codD              VARCHAR2(4) PRIMARY KEY,
+    fechaHoraD        TIMESTAMP,
+    descripcionD      VARCHAR2(100),
+    codP              VARCHAR2(4),
+    codM              VARCHAR2(4),
+    FOREIGN KEY (codP) REFERENCES tPaciente(codP),
+    FOREIGN KEY (codM) REFERENCES tMedico(codM)
+);
+
+CREATE TABLE tEspecialidadDelMedico (
+    codEspM           VARCHAR2(4) PRIMARY KEY,
+    codEsp            VARCHAR2(4),
+    codM              VARCHAR2(4),
+    fechaDeObtencionDeLaEspecialidadEspM DATE,
+    FOREIGN KEY (codEsp) REFERENCES tEspecialidad(codEsp),
+    FOREIGN KEY (codM) REFERENCES tMedico(codM)
+);
+
+CREATE TABLE tEnfermedadEnElDiagnostico (
+    codED             VARCHAR2(4) PRIMARY KEY,
+    codE              VARCHAR2(4),
+    codD              VARCHAR2(4),
+    FOREIGN KEY (codE) REFERENCES tEnfermedad(codE),
+    FOREIGN KEY (codD) REFERENCES tDiagnostico(codD)
+);
+
+INSERT INTO tPaciente VALUES ('P01', 'DNI', '11111111', 'Salas', 'Rivas', 'Juan', TO_DATE('2000-02-02', 'YYYY-MM-DD'), 'M');
+INSERT INTO tPaciente VALUES ('P02', 'DNI', '22222222', 'Pérez', 'Rozas', 'Elena', TO_DATE('2020-10-01', 'YYYY-MM-DD'), 'F');
+
+INSERT INTO tMedico VALUES ('M1', 'DNI', '33333333', 'Zela', 'Ramírez', 'Javier', '999999999', TO_DATE('1970-10-10', 'YYYY-MM-DD'), 'M');
+INSERT INTO tMedico VALUES ('M2', 'Carnet', '7777', 'Cabral', 'Desousa', 'Alejandra', '988888877', TO_DATE('1975-12-06', 'YYYY-MM-DD'), 'F');
+
+INSERT INTO tEspecialidad VALUES ('Esp1', 'Otorrinolaringología', 'Ojos, nariz y boca');
+INSERT INTO tEspecialidad VALUES ('Esp2', 'Pediatría', 'Neonato, niño y adolescente');
+INSERT INTO tEspecialidad VALUES ('Esp3', 'Cardiología', 'Corazón, sistema circulatorio');
+INSERT INTO tEspecialidad VALUES ('Esp4', 'Odontología', 'Dientes, encías');
+
+INSERT INTO tEnfermedad VALUES ('E1', 'Alergia respiratoria', 'Alergias en el sistema respiratorio');
+INSERT INTO tEnfermedad VALUES ('E2', 'Sinusitis', 'Gripe crónica');
+INSERT INTO tEnfermedad VALUES ('E3', 'Artritis', 'Enfermedad crónica de los huesos');
+
+INSERT INTO tDiagnostico VALUES ('D1', TO_TIMESTAMP('2022-02-25 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Sinusitis aguda y alergia', 'P01', 'M1');
+INSERT INTO tDiagnostico VALUES ('D2', TO_TIMESTAMP('2022-02-28 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Niña sana', 'P02', 'M2');
+
+INSERT INTO tEspecialidadDelMedico VALUES ('EM1', 'Esp1', 'M1', TO_DATE('2010-12-12', 'YYYY-MM-DD'));
+INSERT INTO tEspecialidadDelMedico VALUES ('EM2', 'Esp2', 'M2', TO_DATE('2009-02-02', 'YYYY-MM-DD'));
+INSERT INTO tEspecialidadDelMedico VALUES ('EM3', 'Esp3', 'M2', TO_DATE('2019-11-21', 'YYYY-MM-DD'));
+
+INSERT INTO tEnfermedadEnElDiagnostico VALUES ('ED1', 'E1', 'D1');
+INSERT INTO tEnfermedadEnElDiagnostico VALUES ('ED2', 'E2', 'D1');
+
+COMMIT;
+
+---------------todos los datos de los médicos y sus especialidades
+create or replace view VistasMedicoEspecialidad as
+select 
+    m.CodM,m.TipoDocM,m.NroDocM,m.PaternoM, m.MaternoM,m.NombresM,m.CelularM,m.FechaNacimientoM,m.GeneroM,e.CodEsp,e.NombreEsp,e.DescripcionEsp,em.FechaDeObtencionDeLaEspecialidadEspM
+from tMedico m
+join tEspecialidadDelMedico em on m.CodM = em.CodM
+join tEspecialidad e on em.CodEsp = e.CodEsp;
+select * from VistasMedicoEspecialidad;
+---------------mostrar cuántas especialidades tiene cada médico
+select 
+    CodM,PaternoM,MaternoM,NombresM,count(CodEsp) as NumeroDeEspecialidades
+from VistasMedicoEspecialidad
+group by CodM, PaternoM, MaternoM, NombresM
+order by NumeroDeEspecialidades desc;
+--------------mostrar solamente a los médicos que tengan 2 a más especialidades
+select 
+    CodM,PaternoM,MaternoM,NombresM,
+    count(CodEsp) as NumeroDeEspecialidades
+from VistasMedicoEspecialidad
+group by CodM, PaternoM, MaternoM, NombresM
+having count(CodEsp) >= 2
+order by NumeroDeEspecialidades desc;
+-------------enfermedades que aún no se hayan detectado en los diagnósticos
+create or replace view VistasEnfermedadesNoDetectadas as
+select 
+    e.CodE,e.NombreE,e.DescricionE
+from tEnfermedad e
+left join tEnfermedadEnElDiagnostico ed on e.CodE = ed.CodE
+where ed.CodE is null;
+select * from VistasEnfermedadesNoDetectadas;
+-----------especialidades para las cuales aún no se tengan médicos
+create or replace view VistasEspecialidadesSinMedico as
+select 
+    e.CodEsp,e.NombreEsp,e.DescripcionEsp
+from tEspecialidad e
+left join tEspecialidadDelMedico em on e.CodEsp = em.CodEsp
+where em.CodEsp is null;
+select * from VistasEspecialidadesSinMedico;
+---------cuántas especialidades aún no tienen médico
+select count(*) as TotalEspecialidadesSinMedico
+from VistasEspecialidadesSinMedico;
+---------nombres de los pacientes cuyos diagnósticos no estén relacionados con ninguna enfermedad
+create or replace view VistasPacientesSinEnfermedad as
+select 
+    p.CodP,p.PaternoP,p.MaternoP,p.NombresP,d.CodD,d.DescripcionD,d.FechaHoraD
+from tPaciente p
+join tDiagnostico d on p.CodP = d.CodP
+left join tEnfermedadEnElDiagnostico ed on d.CodD = ed.CodD
+where ed.CodD is null;
+-------nombres de pacientes
+select distinct
+    p.PaternoP || ' ' || p.MaternoP || ', ' || p.NombresP as NombreCompletoPaciente
+from tPaciente p
+join tDiagnostico d on p.CodP = d.CodP
+left join tEnfermedadEnElDiagnostico ed on d.CodD = ed.CodD
+where ed.CodD is null;
