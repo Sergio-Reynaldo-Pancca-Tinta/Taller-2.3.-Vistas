@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía - Taller Vistas SQL | Base de Datos Clínica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            padding: 40px 20px;
+            color: #1a2a3a;
+        }
+
+        /* Contenedor principal estilo infografía */
+        .infografia {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Header institucional */
+        .header {
+            background: #0b3b5f;
+            color: white;
+            padding: 30px 40px 20px 40px;
+            text-align: center;
+            border-bottom: 6px solid #ffb74d;
+        }
+
+        .universidad {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .facultad {
+            font-size: 0.9rem;
+            margin-top: 6px;
+            opacity: 0.8;
+        }
+
+        .titulo-taller {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #fff, #ffd966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+        }
+
+        .curso-docente {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 15px;
+            font-size: 1rem;
+            background: #0f2c40;
+            display: inline-flex;
+            padding: 8px 24px;
+            border-radius: 60px;
+            margin-bottom: 10px;
+        }
+
+        .alumno {
+            background: #ffb74d;
+            color: #0b3b5f;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* grid de cards */
+        .grid-vistas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            padding: 40px;
+            background: #f8fafc;
+        }
+
+        .card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            border: 1px solid #e2edf7;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1e4a76;
+            color: white;
+            padding: 16px 20px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header .numero {
+            background: #ffb74d;
+            color: #0b3b5f;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .card-body {
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .enunciado {
+            font-weight: 600;
+            color: #0f2c40;
+            margin-bottom: 16px;
+            border-left: 4px solid #ffb74d;
+            padding-left: 12px;
+            font-size: 0.95rem;
+        }
+
+        code {
+            background: #1e2a36;
+            color: #e2f0fa;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        pre {
+            background: #0d1c2a;
+            color: #d6ecff;
+            padding: 14px;
+            border-radius: 20px;
+            overflow-x: auto;
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .resultado-note {
+            background: #eef2ff;
+            padding: 10px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border-left: 3px solid #1e4a76;
+            margin-top: 12px;
+        }
+
+        .badge {
+            background: #ffb74d30;
+            color: #b45309;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* secciones extras */
+        .conclusiones {
+            background: #eef2fa;
+            padding: 30px 40px;
+            border-top: 1px solid #cbdde9;
+            border-bottom: 1px solid #cbdde9;
+        }
+
+        .sugerencias {
+            background: #fff6e5;
+            padding: 30px 40px;
+        }
+
+        .footer-img {
+            background: #0b3b5f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            color: #0b3b5f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        hr {
+            margin: 16px 0;
+            border-color: #cbdde9;
+        }
+
+        @media (max-width: 700px) {
+            .grid-vistas {
+                padding: 20px;
+            }
+            .titulo-taller {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="infografia">
+
+    <!-- Encabezado con datos institucionales -->
+    <div class="header">
+        <div class="universidad">UNIVERSIDAD ANDINA DEL CUSCO</div>
+        <div class="facultad">FACULTAD DE INGENIERÍA Y ARQUITECTURA</div>
+        <div class="titulo-taller">📊 TALLER 2.3: VISTAS EN SQL</div>
+        <div style="margin-top: 15px;">
+            <span class="curso-docente" style="background:#1a4968;">📘 Modelado de Base de Datos | 👨‍🏫 Hugo Espetia Huamanga</span>
+        </div>
+        <div class="alumno">👨‍🎓 PANCCA TINTA SERGIO REYNALDO</div>
+        <div style="margin-top: 12px; font-size: 0.8rem;">📅 Cusco - Perú, 2026  |  🛠️ Oracle SQL Developer</div>
+    </div>
+
+    <!-- Introducción resumida -->
+    <div style="background: #eef2fa; padding: 20px 40px; border-bottom: 1px solid #d4e0ec;">
+        <p style="line-height: 1.5; text-align: justify; font-size: 0.95rem;">📌 <strong>Introducción:</strong> Se implementaron vistas sobre una base de datos clínica (tPaciente, tMedico, tEspecialidad, tEnfermedad, tDiagnostico) en Oracle SQL Developer. Las vistas permiten abstraer consultas repetitivas, optimizar el acceso a información médica y mejorar la seguridad. El informe cubre 7 requerimientos (desde médicos con especialidades hasta pacientes sin enfermedades asociadas), siguiendo normativa APA 7.</p>
+    </div>
+
+    <!-- CUADRILLA PRINCIPAL: LOS 7 EJERCICIOS -->
+    <div class="grid-vistas">
+        
+        <!-- 5.1 Vista Médicos + Especialidades -->
+        <div class="card">
+            <div class="card-header"><span class="numero">1</span> 5.1 Médicos y especialidades</div>
+            <div class="card-body">
+                <div class="enunciado">🔍 Crear vista que muestre TODOS los datos del médico y sus especialidades.</div>
+                <pre>create or replace view VistasMedicoEspecialidad as
+select m.CodM, m.TipoDocM, m.NroDocM,
+       m.PaternoM, m.MaternoM, m.NombresM,
+       m.CelularM, m.FechaNacimientoM, m.GeneroM,
+       e.CodEsp, e.NombreEsp, e.DescripcionEsp,
+       em.FechaDeObtencionDeLaEspecialidadEspM
+from tMedico m
+join tEspecialidadDelMedico em on m.CodM = em.CodM
+join tEspecialidad e on em.CodEsp = e.CodEsp;</pre>
+                <div class="resultado-note">✅ Vista creada. Para mostrar los datos: <code>SELECT * FROM VistasMedicoEspecialidad;</code> — Muestra todos los médicos con el detalle de cada especialidad.</div>
+            </div>
+        </div>
+
+        <!-- 5.2 Cuántas especialidades tiene cada médico -->
+        <div class="card">
+            <div class="card-header"><span class="numero">2</span> 5.2 Conteo por médico</div>
+            <div class="card-body">
+                <div class="enunciado">📊 A partir de la vista anterior: mostrar cuántas especialidades tiene cada médico.</div>
+                <pre>select CodM, PaternoM, MaternoM, NombresM,
+       count(CodEsp) as NumeroDeEspecialidades
+from VistasMedicoEspecialidad
+group by CodM, PaternoM, MaternoM, NombresM
+order by NumeroDeEspecialidades desc;</pre>
+                <div class="resultado-note">📌 Resultado esperado: M1 → 1 especialidad, M2 → 2 especialidades.</div>
+            </div>
+        </div>
+
+        <!-- 5.3 Médicos con 2 o más especialidades -->
+        <div class="card">
+            <div class="card-header"><span class="numero">3</span> 5.3 Médicos ≥ 2 especialidades</div>
+            <div class="card-body">
+                <div class="enunciado">🏥 Mostrar médicos que tengan 2 o más especialidades.</div>
+                <pre>select CodM, PaternoM, MaternoM, NombresM,
+       count(CodEsp) as NumeroDeEspecialidades
+from VistasMedicoEspecialidad
+group by CodM, PaternoM, MaternoM, NombresM
+having count(CodEsp) >= 2;</pre>
+                <div class="resultado-note">⚕️ El Dr. M2 (Alejandra Cabral) posee Pediatría y Cardiología → cumple condición.</div>
+            </div>
+        </div>
+
+        <!-- 5.4 Enfermedades NO detectadas en diagnósticos -->
+        <div class="card">
+            <div class="card-header"><span class="numero">4</span> 5.4 Enfermedades sin diagnóstico</div>
+            <div class="card-body">
+                <div class="enunciado">🦠 Vista que muestre enfermedades aún no detectadas en diagnósticos.</div>
+                <pre>create or replace view VistasEnfermedadesNoDetectadas as
+select e.CodE, e.NombreE, e.DescricionE
+from tEnfermedad e
+left join tEnfermedadEnElDiagnostico ed
+    on e.CodE = ed.CodE
+where ed.CodE is null;</pre>
+                <div class="resultado-note">⚠️ Según datos: "Artritis (E3)" nunca ha sido diagnosticada.</div>
+            </div>
+        </div>
+
+        <!-- 5.5 Especialidades sin médicos -->
+        <div class="card">
+            <div class="card-header"><span class="numero">5</span> 5.5 Especialidades sin médico</div>
+            <div class="card-body">
+                <div class="enunciado">🏛️ Vista de especialidades para las cuales aún no hay médicos.</div>
+                <pre>create or replace view VistasEspecialidadesSinMedico as
+select e.CodEsp, e.NombreEsp, e.DescripcionEsp
+from tEspecialidad e
+left join tEspecialidadDelMedico em
+    on e.CodEsp = em.CodEsp
+where em.CodEsp is null;</pre>
+                <div class="resultado-note">🦷 Esp4 (Odontología) no tiene ningún médico asignado en la clínica.</div>
+            </div>
+        </div>
+
+        <!-- 5.6 Cuántas especialidades sin médico -->
+        <div class="card">
+            <div class="card-header"><span class="numero">6</span> 5.6 Conteo de especialidades sin médico</div>
+            <div class="card-body">
+                <div class="enunciado">🔢 A partir de la vista anterior: mostrar cuántas especialidades no tienen médico.</div>
+                <pre>select count(*) as TotalEspecialidadesSinMedico
+from VistasEspecialidadesSinMedico;</pre>
+                <div class="resultado-note">📆 Resultado: 1 especialidad (Odontología) aún no tiene médico.</div>
+            </div>
+        </div>
+
+        <!-- 5.7 Pacientes con diagnóstico sin enfermedad -->
+        <div class="card">
+            <div class="card-header"><span class="numero">7</span> 5.7 Pacientes sin enfermedad asociada</div>
+            <div class="card-body">
+                <div class="enunciado">👤 Vista con nombres de pacientes cuyos diagnósticos NO estén relacionados con enfermedad alguna.</div>
+                <pre>create or replace view VistasPacientesSinEnfermedad as
+select p.CodP, p.PaternoP, p.MaternoP, p.NombresP,
+       d.CodD, d.DescripcionD, d.FechaHoraD
+from tPaciente p
+join tDiagnostico d on p.CodP = d.CodP
+left join tEnfermedadEnElDiagnostico ed on d.CodD = ed.CodD
+where ed.CodD is null;
+
+-- Nombres de pacientes:
+select distinct p.PaternoP||' '||p.MaternoP||', '||p.NombresP as NombreCompleto
+from tPaciente p
+join tDiagnostico d on p.CodP = d.CodP
+left join tEnfermedadEnElDiagnostico ed on d.CodD = ed.CodD
+where ed.CodD is null;</pre>
+                <div class="resultado-note">👶 La paciente Elena Pérez (P02) tiene diagnóstico "Niña sana" sin enfermedades vinculadas.</div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Conclusiones y sugerencias (tomado textual del desarrollo) -->
+    <div class="conclusiones">
+        <h3>📌 Conclusiones</h3>
+        <p style="line-height: 1.5; text-align: justify;">La implementación de vistas en Oracle SQL Developer permitió simplificar consultas complejas y agilizar el acceso a información clave de la clínica, como la relación médicos-especialidades, enfermedades no diagnosticadas y pacientes sin asociación patológica. Se comprobó que las vistas no solo facilitan la reutilización de lógica de negocio, sino que también mejoran la seguridad al ocultar detalles estructurales de la base de datos.</p>
+    </div>
+    <div class="sugerencias">
+        <h3>💡 Sugerencias</h3>
+        <p style="line-height: 1.5;">✔ Incorporar índices sobre las columnas utilizadas en los JOIN (codM, codEsp, codE, codD) para optimizar el rendimiento cuando la base de datos crezca en volumen. <br>
+        ✔ Considerar vistas materializadas si se requieren consultas frecuentes con agregaciones. <br>
+        ✔ Establecer permisos diferenciados por roles (médico, administrador, paciente) para garantizar confidencialidad de datos clínicos.</p>
+    </div>
+
+    <!-- Referencia APA -->
+    <div style="background: #e9f0f5; padding: 20px 40px; border-top: 1px solid #ccddee;">
+        <h3 style="font-size: 1.2rem;">📖 Referencia bibliográfica (APA 7)</h3>
+        <p>Espetia Huamanga, H. (2026). <em>Taller 2.3. Vistas</em>. Curso de Modelado de Base de Datos, Universidad Andina del Cusco. <br>
+        Pancca Tinta, S. R. (2026). <em>Implementación de vistas en Oracle SQL Developer para base de datos clínica - Solución individual.</em> Trabajo práctico, Universidad Andina del Cusco.</p>
+        <hr>
+        <div style="font-size: 0.8rem; text-align: center;">📄 Infografía basada en el Taller 2.3 – Modelado de Base de Datos | Entrega individual – Sergio Pancca</div>
+    </div>
+
+    <div class="footer-img">
+        🏥 Base de datos clínica | Vistas funcionales para agilizar consultas y reportes | Oracle Developer
+    </div>
+</div>
+</body>
+</html>
